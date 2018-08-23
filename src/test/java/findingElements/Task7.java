@@ -1,4 +1,4 @@
-package elementsProperties;
+package findingElements;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -10,15 +10,13 @@ import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
-public class Task9 {
 
+public class Task7 {
 
     private WebDriver driver;
     private WebDriverWait wait;
@@ -41,32 +39,30 @@ public class Task9 {
         driver.findElement(By.name("login")).click();
     }
 
-
     @Test
-    public void checkCountriesSort() {
+    public void checkMenuItems() {
+        List<WebElement> menuItems;
+        List<WebElement> submenuItems;
+
         login();
-        driver.navigate().to("http://localhost/litecart/admin/?app=countries&doc=countries");
+        menuItems = driver.findElements(By.cssSelector("li[id='app-'] > a"));
+        for (int i = 0; i < menuItems.size(); i++) {
+            menuItems = driver.findElements(By.cssSelector("li[id='app-'] > a"));
+            menuItems.get(i).click();
+            menuItems = driver.findElements(By.cssSelector("li[id='app-'] > a"));
+            assertTrue(driver.findElement(By.cssSelector("h1")).isDisplayed());
 
-        int countriesSize = driver.findElements(By.cssSelector("tr.row")).size();
-        System.out.println(countriesSize);
-        List<WebElement> countries = driver.findElements(By.xpath("//tr[contains(@class,'row')]/td[5]/a"));
+            if (driver.findElements(By.cssSelector(".docs")).size() > 0) {
+                submenuItems = driver.findElements(By.cssSelector("li#app-.selected ul li"));
+                for (int j = 0; j < submenuItems.size(); j++) {
+                    submenuItems = driver.findElements(By.cssSelector("li#app-.selected ul li"));
+                    submenuItems.get(j).click();
+                    assertTrue(driver.findElement(By.cssSelector("h1")).isDisplayed());
 
+                }
+            }
 
-        List<String> countriesList = new ArrayList<String>();
-
-        for (int i = 0; i < countriesSize; i++) {
-            System.out.println(countries.get(i).getText());
-            countriesList.add(countries.get(i).getText());
         }
-
-        List<String> countriesListBeforeSorting = new ArrayList<String>(countriesList);
-        Collections.sort(countriesList);
-        assertEquals(countriesList, countriesListBeforeSorting);
-
-
-
-
-
     }
 
     @AfterTest

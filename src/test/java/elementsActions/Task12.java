@@ -3,22 +3,16 @@ package elementsActions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
-import java.security.Key;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
-
-import static org.testng.Assert.assertEquals;
 
 public class Task12 {
 
@@ -60,11 +54,8 @@ public class Task12 {
     public void checkAddingProduct() {
         String productName = generateProductName();
         String code = String.valueOf(generateCode());
-
         addProduct(productName, code);
-        checkProductInCatalog(productName);
-
-
+        searchProductInCatalog(productName);
     }
 
 
@@ -77,11 +68,11 @@ public class Task12 {
         driver.findElement(By.cssSelector("[name='name[en]']")).sendKeys(productName);
         driver.findElement(By.cssSelector("[name=code]")).sendKeys(code);
         driver.findElement(By.cssSelector("[name='product_groups[]'][value='1-1']")).click();
+        driver.findElement(By.cssSelector("[name='new_images[]']")).sendKeys("C:\\images.jpg");
         driver.findElement(By.cssSelector("[name=quantity]")).clear();
         driver.findElement(By.cssSelector("[name=quantity]")).sendKeys("10");
-        driver.findElement(By.cssSelector("[name=date_valid_from]")).click();
-        driver.findElement(By.cssSelector("[name=date_valid_from]")).sendKeys("2018" + Keys.TAB + "01.01");
-        driver.findElement(By.cssSelector("[name=date_valid_to]")).sendKeys("2018" + Keys.TAB + "12.31");
+        driver.findElement(By.cssSelector("[name='date_valid_from']")).sendKeys("01012018");
+        driver.findElement(By.cssSelector("[name='date_valid_to']")).sendKeys("31122018");
 
         driver.findElement(By.cssSelector("div[class=tabs] a[href='#tab-information']")).click();
         driver.findElement(By.cssSelector("select[name=manufacturer_id]")).sendKeys("ACME" + Keys.ENTER);
@@ -93,14 +84,16 @@ public class Task12 {
 
         driver.findElement(By.cssSelector("div[class=tabs] a[href='#tab-prices']")).click();
         driver.findElement(By.cssSelector("[name=purchase_price]")).clear();
-        driver.findElement(By.cssSelector("[name=purchase_price]")).sendKeys("999.50");
+        driver.findElement(By.cssSelector("[name=purchase_price]")).sendKeys("999");
         driver.findElement(By.cssSelector("option[value=USD]")).click();
 
         driver.findElement(By.cssSelector("button[name=save]")).click();
     }
 
-    private void checkProductInCatalog(String productName) {
-
+    private void searchProductInCatalog(String productName) {
+        driver.navigate().to("http://localhost/litecart/admin/?app=catalog&doc=catalog");
+        driver.findElement(By.cssSelector("input[name=query]")).sendKeys(productName + Keys.ENTER);
+        Assert.assertTrue(driver.findElement(By.linkText(productName)).getText().contains(productName));
     }
 
     @AfterTest

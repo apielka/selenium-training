@@ -6,6 +6,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
@@ -43,7 +44,7 @@ public class Task9 {
 
 
     @Test
-    public void checkCountriesSort() {
+    public void checkCountriesSorting() {
         login();
         driver.navigate().to("http://localhost/litecart/admin/?app=countries&doc=countries");
 
@@ -62,12 +63,24 @@ public class Task9 {
         List<String> countriesListBeforeSorting = new ArrayList<String>(countriesList);
         Collections.sort(countriesList);
         assertEquals(countriesList, countriesListBeforeSorting);
+    }
+
+    @Test
+    public void checkZonesInCountriesSorting(){
+        login();
+        driver.navigate().to("http://localhost/litecart/admin/?app=countries&doc=countries");
+    }
 
 
 
-
+    @Test
+    public void checkZonesSorting(){
 
     }
+
+
+
+
 
     @AfterTest
     public void stop() {

@@ -7,18 +7,14 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.testng.Assert;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static org.openqa.selenium.By.cssSelector;
-import static org.openqa.selenium.support.ui.ExpectedConditions.stalenessOf;
 import static org.openqa.selenium.support.ui.ExpectedConditions.textToBe;
-import static org.testng.Assert.assertEquals;
 
 public class Task13 {
 

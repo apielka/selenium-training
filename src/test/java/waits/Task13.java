@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static org.openqa.selenium.By.cssSelector;
+import static org.openqa.selenium.support.ui.ExpectedConditions.stalenessOf;
 import static org.openqa.selenium.support.ui.ExpectedConditions.textToBe;
 import static org.testng.Assert.assertEquals;
 
@@ -37,21 +38,19 @@ public class Task13 {
 
     @Test
     public void checkAddingAndDeletingProducts() {
-        addProduct("Blue Duck", 3);
-        addProduct("Red Duck", 3);
+        addProduct("Blue Duck", 1);
+        addProduct("Red Duck", 1);
+        addProduct("Green Duck", 1);
         removeProduct();
-
-
     }
 
     private void addProduct(String productName, int amount) {
-        int quantityInBasket1 =  Integer.parseInt(driver.findElement(cssSelector("span.quantity")).getText());
+        int currentQuantityInBasket = Integer.parseInt(driver.findElement(cssSelector("span.quantity")).getText());
         for (int i = 1; i <= amount; i++) {
             driver.findElement(cssSelector(".link[title='" + productName + "']")).click();
             driver.findElement(cssSelector("[name='add_cart_product']")).click();
             WebElement quantityInBasket = driver.findElement(cssSelector("span.quantity"));
-            wait.until(textToBe(cssSelector("span.quantity"), String.valueOf(i+quantityInBasket1)));
-            System.out.println("quantityInBasket: " + quantityInBasket.getText());
+            wait.until(textToBe(cssSelector("span.quantity"), String.valueOf(i + currentQuantityInBasket)));
             driver.findElement(cssSelector("img[title='My Store']")).click();
         }
         driver.findElement(By.cssSelector("div#cart > a.link"));
@@ -61,9 +60,10 @@ public class Task13 {
 
         driver.findElement(By.cssSelector("div#cart > a.link")).click();
 
-        for (int i = 0; i <= 3; i++){
-            driver.findElement(By.cssSelector("input[name='quantity']")).click();
-            driver.findElement(By.cssSelector("button[value='Update']")).click();
+        for (int i = 0; i <= 2; i++) {
+            driver.findElement(By.cssSelector("button[value='Remove']")).click();
+            WebElement summaryTable = driver.findElement(By.cssSelector("#box-checkout-summary"));
+            wait.until(ExpectedConditions.stalenessOf(summaryTable));
         }
     }
 

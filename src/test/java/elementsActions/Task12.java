@@ -11,6 +11,7 @@ import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
+import java.io.File;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -60,6 +61,9 @@ public class Task12 {
 
 
     private void addProduct(String productName, String code) {
+        File myFile = new File("image.jpg");
+        String absolutePath = myFile.getAbsolutePath();
+
         login();
         driver.navigate().to("http://localhost/litecart/admin/?app=catalog&doc=catalog");
         driver.findElement(By.cssSelector("#content > div:nth-of-type(1) > a:nth-of-type(2)")).click();
@@ -68,7 +72,7 @@ public class Task12 {
         driver.findElement(By.cssSelector("[name='name[en]']")).sendKeys(productName);
         driver.findElement(By.cssSelector("[name=code]")).sendKeys(code);
         driver.findElement(By.cssSelector("[name='product_groups[]'][value='1-1']")).click();
-        driver.findElement(By.cssSelector("[name='new_images[]']")).sendKeys("C:\\images.jpg");
+        driver.findElement(By.cssSelector("[name='new_images[]']")).sendKeys(absolutePath);
         driver.findElement(By.cssSelector("[name=quantity]")).clear();
         driver.findElement(By.cssSelector("[name=quantity]")).sendKeys("10");
         driver.findElement(By.cssSelector("[name='date_valid_from']")).sendKeys("01012018");

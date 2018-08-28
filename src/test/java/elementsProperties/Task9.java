@@ -5,12 +5,14 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -74,10 +76,41 @@ public class Task9 {
 
 
     @Test
-    public void checkZonesSorting(){
+    public void checkZonesSorting() {
 
+        login();
+        driver.get("http://localhost/litecart/admin/?app=geo_zones&doc=geo_zones");
+
+
+        int countriesSize = driver.findElements(By.cssSelector(".dataTable .row td:nth-child(3) > a")).size();
+        for (int i = 0; i < countriesSize; i++) {
+            List<WebElement> countries = driver.findElements(By.cssSelector(".dataTable .row td:nth-child(3) > a"));
+            countries.get(i).getText();
+            System.out.println(countries.get(i).getText());
+            countries.get(i).click();
+
+            List<WebElement> geoZones = driver.findElements(By.cssSelector(".dataTable tr td:nth-child(3) select option:checked"));
+            int geoZonesSize = geoZones.size();
+            System.out.println("geoZones count: " + geoZones.size());
+
+            List<String> geoZonesList = new ArrayList<String>();
+            for (int j = 0; j < geoZonesSize; j++)
+            {
+                geoZonesList.add(geoZones.get(j).getText());
+            }
+            System.out.println(geoZonesList);
+            driver.get("http://localhost/litecart/admin/?app=geo_zones&doc=geo_zones");
+
+            //System.out.println(countries.get(i).getText());
+
+            //matching if geozones sorted
+          /* List<String> copy = geozones;
+            Collections.sort(geozones);
+            Assert.assertEquals(copy,geozones);*/
+
+
+        }
     }
-
 
 
 

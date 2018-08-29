@@ -5,14 +5,9 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.testng.Assert;
-import org.testng.annotations.AfterTest;
-import org.testng.annotations.BeforeTest;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -26,7 +21,7 @@ public class Task9 {
     private WebDriver driver;
     private WebDriverWait wait;
 
-    @BeforeTest
+    @BeforeMethod
     public void start() {
         ChromeOptions options = new ChromeOptions();
         options.addArguments("start-maximized");
@@ -65,21 +60,27 @@ public class Task9 {
     public void checkZonesInCountriesSorting() {
         login();
         driver.navigate().to("http://localhost/litecart/admin/?app=countries&doc=countries");
-
         int countriesSize = driver.findElements(By.cssSelector("tr.row")).size();
-        System.out.println(countriesSize);
-        List<WebElement> countries = driver.findElements(By.xpath("//tr[contains(@class,'row')]/td[5]/a"));
-
 
         for (int i = 0; i < countriesSize; i++) {
-            int zonesCount = Integer.parseInt(driver.findElement(By.cssSelector("tbody > tr > td:nth-child(6)")).getText());
-            System.out.println(countries.get(i).getText());
+            List<WebElement> countries = driver.findElements(By.cssSelector("tbody > tr > td:nth-child(5) > a"));
+            int zonesCount = Integer.parseInt(driver.findElement(By.cssSelector("tbody > tr:nth-of-type(" + (i + 2) + ") > td:nth-of-type(6)")).getText());
+
             if (zonesCount > 0) {
                 countries.get(i).click();
-                System.out.println(countries.get(i).getText());
+                int zonesSize = driver.findElements(By.cssSelector("[id=table-zones] > tbody > tr > td:nth-child(3) > input[type=hidden]")).size();
+                List<String> zonesList = new ArrayList<String>();
+
+                for (int j = 0; j < zonesSize; j++) {
+
+                    List<WebElement> zones = driver.findElements(By.cssSelector("[id=table-zones] > tbody > tr > td:nth-child(3) > input[type=hidden]"));
+                    zonesList.add(zones.get(j).getAttribute("value"));
+                }
+                List<String> zonesListBeforeSorting = new ArrayList<String>(zonesList);
+                Collections.sort(zonesList);
+                assertEquals(zonesList, zonesListBeforeSorting);
                 driver.navigate().to("http://localhost/litecart/admin/?app=countries&doc=countries");
             }
-
         }
     }
 
@@ -113,7 +114,7 @@ public class Task9 {
     }
 
 
-    @AfterTest
+    @AfterMethod
     public void stop() {
         driver.close();
     }

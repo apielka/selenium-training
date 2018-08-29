@@ -49,16 +49,10 @@ public class Task9 {
     public void checkCountriesSorting() {
         login();
         driver.navigate().to("http://localhost/litecart/admin/?app=countries&doc=countries");
-
-        int countriesSize = driver.findElements(By.cssSelector("tr.row")).size();
-        System.out.println(countriesSize);
         List<WebElement> countries = driver.findElements(By.xpath("//tr[contains(@class,'row')]/td[5]/a"));
-
-
         List<String> countriesList = new ArrayList<String>();
 
-        for (int i = 0; i < countriesSize; i++) {
-            System.out.println(countries.get(i).getText());
+        for (int i = 0; i < countries.size(); i++) {
             countriesList.add(countries.get(i).getText());
         }
 
@@ -68,11 +62,26 @@ public class Task9 {
     }
 
     @Test
-    public void checkZonesInCountriesSorting(){
+    public void checkZonesInCountriesSorting() {
         login();
         driver.navigate().to("http://localhost/litecart/admin/?app=countries&doc=countries");
-    }
 
+        int countriesSize = driver.findElements(By.cssSelector("tr.row")).size();
+        System.out.println(countriesSize);
+        List<WebElement> countries = driver.findElements(By.xpath("//tr[contains(@class,'row')]/td[5]/a"));
+
+
+        for (int i = 0; i < countriesSize; i++) {
+            int zonesCount = Integer.parseInt(driver.findElement(By.cssSelector("tbody > tr > td:nth-child(6)")).getText());
+            System.out.println(countries.get(i).getText());
+            if (zonesCount > 0) {
+                countries.get(i).click();
+                System.out.println(countries.get(i).getText());
+                driver.navigate().to("http://localhost/litecart/admin/?app=countries&doc=countries");
+            }
+
+        }
+    }
 
 
     @Test
@@ -84,35 +93,24 @@ public class Task9 {
 
         int countriesSize = driver.findElements(By.cssSelector(".dataTable .row td:nth-child(3) > a")).size();
         for (int i = 0; i < countriesSize; i++) {
+
             List<WebElement> countries = driver.findElements(By.cssSelector(".dataTable .row td:nth-child(3) > a"));
             countries.get(i).getText();
-            System.out.println(countries.get(i).getText());
             countries.get(i).click();
-
-            List<WebElement> geoZones = driver.findElements(By.cssSelector(".dataTable tr td:nth-child(3) select option:checked"));
-            int geoZonesSize = geoZones.size();
-            System.out.println("geoZones count: " + geoZones.size());
-
+            List<WebElement> geoZones = driver.findElements(By.cssSelector("#table-zones [name*=zone_code]"));
             List<String> geoZonesList = new ArrayList<String>();
-            for (int j = 0; j < geoZonesSize; j++)
-            {
-                geoZonesList.add(geoZones.get(j).getText());
+
+            for (int j = 0; j < geoZones.size(); j++) {
+
+                String geoZoneName = geoZones.get(j).findElement(By.cssSelector("[selected]")).getAttribute("textContent");
+                geoZonesList.add(geoZoneName);
             }
-            System.out.println(geoZonesList);
             driver.get("http://localhost/litecart/admin/?app=geo_zones&doc=geo_zones");
-
-            //System.out.println(countries.get(i).getText());
-
-            //matching if geozones sorted
-          /* List<String> copy = geozones;
-            Collections.sort(geozones);
-            Assert.assertEquals(copy,geozones);*/
-
-
+            List<String> geoZonesListBeforeSorting = new ArrayList<String>(geoZonesList);
+            Collections.sort(geoZonesList);
+            assertEquals(geoZonesList, geoZonesListBeforeSorting);
         }
     }
-
-
 
 
     @AfterTest
